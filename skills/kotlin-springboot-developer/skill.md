@@ -50,8 +50,15 @@ Do not use this skill when:
 
 ## Assumptions
 
+## Assumptions
+
 Default assumptions for this skill:
 - the project uses Kotlin with Spring Boot
+- the project targets Java 25
+- the project should use the latest Spring Boot version approved and supported by the project
+- the project must make an explicit persistence choice between MongoDB and SQL
+- when SQL is selected, PostgreSQL is the recommended default unless another relational database is explicitly required
+- the project may use Redis or Valkey as supporting infrastructure when caching, ephemeral state, token management, rate limiting, coordination, or similar needs justify it
 - code should align with an existing documented architecture when one exists
 - secure coding is required by default
 - test coverage should reflect feature risk and impact
@@ -64,6 +71,7 @@ Unless explicitly stated otherwise:
 - keep responsibilities clearly separated
 - avoid silent architecture drift
 - treat documentation updates as part of the work when relevant
+- containerization should be considered part of production-conscious delivery when relevant
 
 ---
 
@@ -154,6 +162,26 @@ When relevant, document major architecture impact through ARD or ADR updates.
 
 ---
 
+## Containerization Standards
+
+When containerization is part of the delivery scope:
+- provide a clear and production-conscious Dockerfile
+- use Java 25 as the runtime baseline unless the project explicitly defines another target
+- prefer multi-stage builds when they improve final image quality and delivery hygiene
+- keep runtime images minimal and explicit
+- avoid baking secrets into images
+- expose only what is needed
+- keep container behavior predictable and environment-driven
+- make health, configuration, and startup behavior understandable
+- document container assumptions when relevant
+
+When relevant:
+- ensure the application runs cleanly in Docker
+- ensure external configuration is handled through environment variables or secure runtime configuration
+- ensure database and infrastructure dependencies are clearly documented for local and delivery usage
+
+---
+
 ## API Design Expectations
 
 - use clear and stable endpoint naming
@@ -169,15 +197,76 @@ If the task affects API behavior, reflect the impact in docs and tests.
 
 ---
 
-## Persistence Expectations
+## Persistence and Supporting Data Infrastructure
 
+The project must make an explicit primary persistence choice based on real product and architecture needs.
+
+Supported primary persistence options:
+- MongoDB for document-oriented persistence
+- SQL, with PostgreSQL as the recommended default when relational persistence is selected
+
+Supported complementary data infrastructure:
+- Redis or Valkey for caching, ephemeral state, token-related workflows, rate limiting, lightweight coordination, or similar supporting concerns
+
+### Choosing Between MongoDB and SQL
+
+Choose MongoDB when:
+- the domain is document-oriented
+- denormalized read shapes are a good fit
+- schema flexibility is valuable
+- aggregate-style access patterns dominate
+- relational joins are not a core requirement
+
+Choose SQL / PostgreSQL when:
+- the domain has strong relational structure
+- transactional integrity is important
+- joins and relational querying are central
+- the data model benefits from stricter structure and constraints
+- reporting and relational consistency matter
+
+Do not choose MongoDB or SQL by habit alone.
+The persistence model should fit the real domain, access patterns, consistency needs, and operational constraints.
+
+### Relational Persistence
+
+When the project uses SQL:
+- PostgreSQL is the recommended default unless another relational database is explicitly required
+- use Hibernate through Spring Data JPA unless another approach is explicitly justified
+- keep entity modeling deliberate and readable
+- avoid leaking JPA entities directly through public API contracts unless intentionally designed
+- be careful with lazy loading, N+1 patterns, cascade behavior, and hidden persistence cost
+- model transactional boundaries intentionally
 - keep repository responsibilities focused on persistence access
-- avoid embedding large amounts of business logic in repository implementations
-- model transactions deliberately
-- be cautious with lazy loading, N+1 patterns, and hidden database cost
-- make data access patterns readable and testable
-- document migration or schema impact when relevant
-- do not assume persistence details are harmless to API or service design
+- document schema and migration impact when relevant
+
+### Mongo Persistence
+
+When the project uses MongoDB:
+- use Spring Data MongoDB and Mongo repositories unless another approach is explicitly justified
+- model document structures intentionally
+- avoid treating MongoDB as schemaless chaos
+- keep repository responsibilities focused on persistence access
+- validate assumptions about document shape, indexing, and query behavior
+- be explicit about consistency, update patterns, and denormalization tradeoffs
+- document collection and index impact when relevant
+
+### Redis / Valkey Usage
+
+When Redis or Valkey is used:
+- treat it as supporting infrastructure unless the architecture explicitly defines another role
+- be explicit about what data is ephemeral versus authoritative
+- do not silently move source-of-truth business state into Redis or Valkey
+- document TTL, invalidation strategy, and fallback behavior when relevant
+- validate consistency assumptions between cache and primary persistence
+- be explicit when Redis or Valkey is used for token blacklisting, session support, rate limiting, caching, or distributed coordination
+- document operational impact when relevant
+
+### General Expectations
+
+- keep business logic out of repositories
+- make persistence and supporting data choices visible in documentation and ADRs when they materially affect the architecture
+- do not assume persistence details are harmless to API, service, performance, or security design
+- review indexing, migrations, and operational impact as part of production-conscious delivery
 
 ---
 
@@ -277,8 +366,6 @@ Also validate:
 - duplicate or conflicting operations
 - failure modes with meaningful error behavior
 
-Testing should reflect real risk, not just satisfy a ritual.
-
 ---
 
 ## Documentation Expectations
@@ -343,12 +430,18 @@ A task using this skill is closer to done when:
 - refactor a service to separate orchestration from persistence concerns
 - introduce a new secured admin endpoint with role checks
 - document and implement a backend feature based on PRD and ADR inputs
+- design a persistence strategy and justify whether MongoDB or PostgreSQL is the better fit
+- implement a Spring Data JPA persistence layer backed by PostgreSQL
+- implement a MongoDB-backed feature using Spring Data Mongo repositories
+- introduce Redis or Valkey for caching, token blacklisting, session support, or rate limiting where justified
+- containerize a Kotlin Spring Boot application with a production-conscious Dockerfile targeting Java 25
 
 ---
 
 ## Example Prompts
 
-- "Implement a secured Spring Boot endpoint in Kotlin for creating a new customer, with validation, service layering, and integration tests."
-- "Review this Kotlin Spring Boot service and identify architecture, testing, and secure coding concerns."
-- "Design the backend structure for this feature in Kotlin with Spring Boot, including controller, service, repository, DTOs, and test strategy."
-- "Refactor this Spring Boot flow to better separate responsibilities and document any architecture impact."
+- "Design a Kotlin Spring Boot persistence strategy and justify whether MongoDB or PostgreSQL is the better fit, including repository structure, transaction considerations, and documentation impact."
+- "Implement a PostgreSQL-backed Spring Boot feature using Spring Data JPA and Hibernate, with validation, service layering, and integration tests."
+- "Implement a MongoDB-backed Spring Boot feature using Spring Data Mongo repositories, with clear document modeling and integration tests."
+- "Containerize this Kotlin Spring Boot application with a production-conscious Dockerfile targeting Java 25."
+- "Review whether Redis or Valkey should be introduced for caching, token blacklisting, session support, or rate limiting."
