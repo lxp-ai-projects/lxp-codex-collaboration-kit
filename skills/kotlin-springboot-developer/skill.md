@@ -50,8 +50,6 @@ Do not use this skill when:
 
 ## Assumptions
 
-## Assumptions
-
 Default assumptions for this skill:
 - the project uses Kotlin with Spring Boot
 - the project targets Java 25
