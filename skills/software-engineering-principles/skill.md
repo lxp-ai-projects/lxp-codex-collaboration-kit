@@ -83,6 +83,22 @@ Unless explicitly stated otherwise:
 - use tests to validate behavior, not just to inflate numbers
 - use documentation to preserve project memory
 - challenge weak assumptions before they harden into structure
+- prefer project consistency over individual stylistic preference when both are acceptable
+- treat engineering work as a craft that balances multiple concerns, not just a technical puzzle to solve
+- respect the human cost of complexity, not just the technical cost
+- avoid overengineering, but do not mistake simplicity for laziness
+- avoid underengineering, but do not mistake complexity for diligence
+
+---
+
+## Tradeoff Awareness
+
+- no design choice is free
+- prefer explicit tradeoffs over silent compromise
+- document when simplicity was chosen over extensibility
+- document when speed was chosen over elegance
+- document when temporary duplication was accepted to avoid premature abstraction
+- make constraints visible instead of pretending the solution is universally optimal
 
 ---
 
@@ -211,6 +227,8 @@ Testing should validate meaningful behavior, not merely satisfy a coverage targe
 - undocumented decisions that materially affect the project
 - treating documentation as decoration
 - treating security as optional until later
+- cargo-culting principles without understanding context
+- turning clean code into dogma instead of judgment
 
 ---
 

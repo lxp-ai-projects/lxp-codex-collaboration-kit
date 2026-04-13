@@ -59,6 +59,8 @@ Default assumptions for this skill:
 - the repository is the source of truth for requirements, architecture, and testing intent
 - test automation should support maintainability, not just short-term execution
 - accessibility and responsive behavior matter where relevant
+- Playwright should complement, not replace, lower-cost test layers
+- browser-based end-to-end testing belongs near the top of the testing pyramid, not at its base
 
 Unless explicitly stated otherwise:
 - prefer stable selectors
@@ -82,7 +84,7 @@ Unless explicitly stated otherwise:
 - keep test architecture explicit and understandable
 - update documentation when test strategy or expectations materially change
 - surface tradeoffs clearly instead of hiding them in test abstraction
-
+- do not push behavior into Playwright that should be covered more cheaply and clearly at lower test layers
 ---
 
 ## Recommended Workflow
@@ -149,6 +151,7 @@ Prefer a maintainable Playwright architecture based on focused abstractions.
 - test forms, submission behavior, and validation feedback where relevant
 - keep each test focused enough to be diagnosable when it fails
 - avoid writing one giant scenario that tries to validate the entire application at once
+- each test should validate one coherent scenario intent, even if multiple related assertions are needed
 
 ---
 
@@ -199,6 +202,8 @@ Prefer a maintainable Playwright architecture based on focused abstractions.
 - prefer deterministic waits over arbitrary sleeps
 - avoid `waitForTimeout` except for rare debugging purposes
 - make test setup, state preparation, and teardown visible and maintainable
+- use traces, screenshots, and Playwright debugging tools deliberately when diagnosing instability or failures
+- do not turn debugging artifacts into permanent noise without value
 
 ---
 
@@ -283,6 +288,28 @@ Do not let automated test intent drift away from documented product behavior wit
 
 ---
 
+## Test Data Expectations
+
+- test data should be predictable, isolated, and easy to understand
+- avoid hidden dependence on mutable shared environments
+- prefer deterministic setup over fragile cross-test coupling
+- make seed, fixture, or setup assumptions explicit
+- tests should not depend on accidental leftovers from previous runs
+- test cases should never create test data that other tests depend on without explicit setup and teardown
+
+---
+
+## Test Pyramid Expectations
+
+- Playwright sits near the top of the testing pyramid
+- unit tests should cover isolated logic at the lowest and cheapest layer
+- integration tests should cover component, boundary, or service interaction in the middle layer
+- Playwright should cover high-value end-to-end behavior, not everything by default
+- do not push low-level logic validation into expensive browser tests when cheaper layers can validate it more clearly
+- use Playwright for critical journeys, auth flows, route transitions, integration-sensitive UI behavior, accessibility-sensitive interactions, and regression-prone flows where browser-level confidence is valuable
+
+---
+
 ## What to Avoid
 
 - brittle CSS-chain selectors
@@ -298,6 +325,9 @@ Do not let automated test intent drift away from documented product behavior wit
 - assuming a large number of tests means the feature is meaningfully validated
 - ignoring accessibility or responsive behavior on flows where they matter
 - adding broad refactors inside a narrowly scoped testing task without explicit justification
+- retrying flaky tests instead of understanding why they are flaky
+- sharing state implicitly between tests
+- depending on timing luck instead of deterministic readiness
 
 ---
 
