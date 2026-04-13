@@ -122,6 +122,102 @@ Each skill should define:
 
 ---
 
+
+## Install and Use Skills
+
+This repository contains reusable skill content under:
+
+```text
+skills/<skill-name>/skill.md
+```
+
+These files are designed to be installed and reused as Codex skills.
+
+### Install as a personal Codex skill
+
+Use this when you want a skill available across all your local Codex projects.
+
+```bash
+mkdir -p ~/.agents/skills/<skill-name>
+cp skills/<skill-name>/skill.md ~/.agents/skills/<skill-name>/SKILL.md
+```
+
+### Project-level Codex skill
+
+Use this when you want a skill available only inside one repository.
+
+```bash
+mkdir -p .agents/skills/<skill-name>
+cp skills/<skill-name>/skill.md .agents/skills/<skill-name>/SKILL.md
+```
+
+### Install as a personal Claude Code skill
+
+If you want to use them with **Claude Code**, copy them into a Claude-recognized skill directory and rename the file to `SKILL.md`.
+
+Use this when you want a skill available across all your local projects.
+
+```bash
+mkdir -p ~/.claude/skills/<skill-name>
+cp skills/<skill-name>/skill.md ~/.claude/skills/<skill-name>/SKILL.md
+```
+
+### Install as a project-level Claude Code skill
+
+Use this when you want a skill available only inside one repository.
+
+```bash
+mkdir -p .claude/skills/<skill-name>
+cp skills/<skill-name>/skill.md .claude/skills/<skill-name>/SKILL.md
+```
+
+After installation, Claude Code can:
+- invoke the skill directly with `/skill-name`
+- use it automatically when the skill description matches the task context
+
+### Recommended usage
+
+- Use `agent.md` as the collaboration and orchestration reference
+- Use `templates/` to structure project documentation and delivery artifacts
+- Install selected `skills/` into Claude Code when you want them available as reusable workflows
+- Keep repository-specific variants inside `.claude/skills/` when a skill should apply only to one project
+
+---
+
+## Compatibility
+
+This repository is intentionally broader than a pure Claude Code skill pack:
+it includes reusable skills, collaboration guidance, identity patterns, and documentation templates.
+
+### Claude Code compatibility
+
+The content in `skills/` is designed to be compatible with **Claude Code skills** once it is installed into a Claude-recognized skill directory and renamed to `SKILL.md`.
+
+### What is directly compatible with Claude Code?
+
+| Repository part | Purpose                               | Claude Code native skill compatible   |
+|-----------------|---------------------------------------|---------------------------------------|
+| `skills/`       | Reusable skill content                | Yes, after installation as `SKILL.md` |
+| `templates/`    | Reusable project templates            | No                                    |
+| `agent.md`      | Collaboration and orchestration model | No                                    |
+| `agents/`       | Identity / persona layer for this kit | No                                    |
+
+### Important notes
+
+- `agent.md` is part of this repository’s collaboration model, not a native Claude Code skill file
+- `agents/` defines identity and collaboration posture patterns for this kit; it is not a built-in Claude Code skill mechanism
+- `templates/` contains reusable markdown assets for documentation and project structure, but not installable Claude Code skills
+- this repository is still useful outside Claude Code, but the `skills/` directory is the most directly portable part for Claude Code usage
+
+### Practical interpretation
+
+If you are using this repository with Claude Code:
+- install the contents of `skills/` as Claude Code skills
+- use `agent.md`, `agents/`, and `templates/` as reusable guidance and project assets
+- do not assume every markdown file in the repository is a Claude Code-native skill file
+
+---
+
 ## Recommended Repository Structure
 
 ```text
