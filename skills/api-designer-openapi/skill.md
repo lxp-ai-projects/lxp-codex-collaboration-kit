@@ -1,4 +1,4 @@
-# API Designer OpenAPI - version 1.0 - last updated: 2026-04-12 - by Laurie and Patrick
+# API Designer OpenAPI - version 1.1 - last updated: 2026-04-12 - by Laurie and Patrick
 
 ## Purpose
 
@@ -64,6 +64,7 @@ Default assumptions for this skill:
 
 Unless explicitly stated otherwise:
 - use OpenAPI as the contract format
+- prefer OpenAPI 3.1 unless the project explicitly standardizes on another supported version
 - design RESTful APIs with explicit request and response schemas
 - document authentication and authorization expectations clearly
 - use explicit examples where they improve consumer understanding
@@ -93,12 +94,12 @@ Unless explicitly stated otherwise:
 1. Clarify the use case, actors, and expected behavior
 2. Identify the resource or interaction model
 3. Define endpoint paths, methods, and intent
-4. Design request, response, and error schemas
+4. Design request, response, parameter, and error schemas
 5. Define auth/authz expectations
-6. Review compatibility, naming, and consistency
+6. Review compatibility, naming, consistency, and consumer ergonomics
 7. Validate examples and consumer usability
 8. Implement against the contract
-9. update docs, tests, and related ADRs when relevant
+9. Update docs, tests, and related ADRs when relevant
 
 ---
 
@@ -108,6 +109,8 @@ Unless explicitly stated otherwise:
 - use the OpenAPI spec as a collaboration artifact between backend, frontend, QA, and documentation
 - avoid designing the contract as a reverse-engineered afterthought from code
 - treat the contract as part of the product and engineering design
+- major endpoint implementation should not start before the contract has been reviewed and accepted
+- backend and frontend should align on the contract before implementation drift begins
 - make meaningful API changes visible in documentation and review
 - ensure implementation follows the contract or update the contract explicitly
 
@@ -130,9 +133,11 @@ Unless explicitly stated otherwise:
 ## Request and Response Modeling Expectations
 
 - define request and response schemas explicitly
+- model path, query, header, and cookie parameters explicitly when they are part of the contract
 - use reusable schema components where they reduce real duplication
 - do not force reuse when separate schemas are clearer
 - model required vs optional fields deliberately
+- model nullable fields deliberately
 - keep payloads intention-revealing and bounded
 - avoid returning internal-only fields carelessly
 - avoid ambiguous shapes that are hard to validate or consume
@@ -141,14 +146,31 @@ Unless explicitly stated otherwise:
 
 ---
 
+## Consumer and Generation Expectations
+
+- design schemas so they remain understandable for both humans and tooling
+- avoid ambiguous unions or loosely typed structures unless they are truly necessary
+- keep enum values explicit and stable
+- model nullable and optional fields deliberately
+- prefer contracts that can support generated clients or shared DTO workflows cleanly when the project needs them
+- do not let generator convenience override contract clarity, but do consider consumer ergonomics seriously
+- request and response contracts should map cleanly to explicit DTOs
+- distinguish transport schemas from persistence models
+- avoid contract ambiguity that creates fragile mapper logic in strongly typed backends
+- contracts should support explicit DTO validation at the framework boundary when used in typed backend frameworks such as Kotlin/Spring Boot or NestJS
+
+---
+
 ## Error Contract Expectations
 
 - treat error responses as part of the public contract
 - define error shapes intentionally
 - keep error responses consistent across the API where practical
+- define a consistent error envelope when the project uses one
 - avoid leaking internal implementation details, stack traces, or infrastructure specifics
 - distinguish validation, authorization, not found, conflict, and server failure cases deliberately
 - document relevant status codes and their meanings clearly
+- ensure consumers can distinguish technical failure from validation, auth, authorization, conflict, and not-found behavior
 - ensure consumers can understand what category of error occurred without reverse-engineering the backend
 
 ---
@@ -206,10 +228,12 @@ Unless explicitly stated otherwise:
 ## OpenAPI Structure Expectations
 
 - keep the spec readable and organized
+- prefer OpenAPI 3.1 unless the project explicitly standardizes on another supported version
 - use `components` deliberately
+- define `operationId` values consistently
+- use tags meaningfully and group them by domain or bounded feature area
 - avoid excessive indirection in schema references
-- use tags meaningfully
-- keep paths, schemas, and examples easy to navigate
+- keep paths, schemas, parameters, and examples easy to navigate
 - keep naming conventions consistent
 - avoid duplicating near-identical schemas unless clarity truly benefits
 - prefer maintainable structure over clever spec gymnastics
@@ -264,6 +288,8 @@ Do not let implementation drift away from the documented contract without acknow
 - overabstracting the spec until it becomes hard to read
 - assuming implementation coverage proves contract quality
 - ignoring consumer usability when designing the contract
+- designing contracts that encourage exposing persistence entities directly
+- leaving parameters, examples, or auth expectations implicit when they materially affect consumption
 
 ---
 
@@ -272,7 +298,7 @@ Do not let implementation drift away from the documented contract without acknow
 A task using this skill is closer to done when:
 - the API use case is clearly modeled
 - endpoint responsibilities are understandable
-- request, response, and error contracts are explicit
+- request, response, parameter, and error contracts are explicit
 - auth/authz expectations are documented
 - compatibility implications were considered
 - security-sensitive aspects were considered
@@ -292,12 +318,13 @@ A task using this skill is closer to done when:
 - refactor an existing API contract to improve consistency and schema readability
 - document a breaking API change and its versioning implications
 - align frontend and backend teams around a shared OpenAPI contract
+- design request/response schemas that map cleanly to explicit DTOs in Kotlin/Spring Boot or NestJS
 
 ---
 
 ## Example Prompts
 
-- "Design an OpenAPI-first contract for this feature, including endpoints, schemas, error responses, and auth expectations."
-- "Review this OpenAPI spec for clarity, consistency, security, and backward compatibility concerns."
-- "Help me refactor this API contract so it is more consumer-friendly and easier to maintain."
-- "Model pagination, filtering, and error handling for this REST endpoint in a contract-first way."
+- "Design an OpenAPI-first contract for this feature, including endpoints, schemas, parameters, error responses, and auth expectations."
+- "Review this OpenAPI spec for clarity, consistency, security, consumer usability, and backward compatibility concerns."
+- "Help me refactor this API contract so it is more consumer-friendly, DTO-friendly, and easier to maintain."
+- "Model pagination, filtering, parameters, and error handling for this REST endpoint in a contract-first way."
