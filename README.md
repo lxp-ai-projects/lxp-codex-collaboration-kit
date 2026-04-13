@@ -1,6 +1,6 @@
 # lxp-codex-collaboration-kit
 
-Version: last updated: 2024-06-17 - by Laurie and Patrick
+Version 1.1 - last updated: 2026-04-12 - by Laurie and Patrick
 
 A practical collaboration kit for building software projects with clarity, architecture discipline, living documentation, secure coding, and feature-based delivery.
 

@@ -1,4 +1,4 @@
-# PRD: <product-or-feature-title> - last updated: 2024-06-17 - by Laurie and Patrick
+# PRD: <product-or-feature-title> - version 1.1 - last updated: 2026-04-12 - by Laurie and Patrick
 
 - Status: Draft / Proposed / Approved / Superseded
 - Date: YYYY-MM-DD

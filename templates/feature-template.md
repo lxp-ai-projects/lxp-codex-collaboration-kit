@@ -1,4 +1,4 @@
-# Feature: <feature-name> - last updated: 2024-06-17 - by Laurie and Patrick
+# Feature: <feature-name> - version 1.1 - last updated: 2026-04-12 - by Laurie and Patrick
 
 ## Status
 

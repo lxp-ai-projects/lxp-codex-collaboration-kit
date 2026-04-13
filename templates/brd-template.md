@@ -1,4 +1,4 @@
-# BRD: <initiative-or-business-need-title> - last updated: 2024-06-17 - by Laurie and Patrick
+# BRD: <initiative-or-business-need-title> - version 1.1 - last updated: 2026-04-12 - by Laurie and Patrick
 
 - Status: Draft / Proposed / Approved / Superseded
 - Date: YYYY-MM-DD

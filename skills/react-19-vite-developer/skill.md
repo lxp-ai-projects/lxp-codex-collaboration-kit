@@ -1,4 +1,4 @@
-# React 19 Vite Developer - version 1.0 - last updated: 2024-06-17 - by Laurie and Patrick
+# React 19 Vite Developer - version 1.1 - last updated: 2026-04-12 - by Laurie and Patrick
 
 ## Purpose
 
@@ -62,6 +62,7 @@ Default assumptions for this skill:
 
 Unless explicitly stated otherwise:
 - use TypeScript everywhere
+- use `pnpm` as the package manager
 - do not use `any`
 - prefer explicit, readable code over magical abstractions
 - keep responsibilities clearly separated
@@ -70,6 +71,7 @@ Unless explicitly stated otherwise:
 - prefer SPA architecture unless the application clearly requires slug-heavy or SEO-critical routes such as blog-like content
 - prioritize mobile-first responsive design
 - prioritize accessibility from the start, not as a finishing pass
+- enforce ESLint and Prettier as part of normal development workflow
 
 ---
 
@@ -152,12 +154,13 @@ When relevant, document major architecture impact through ARD or ADR updates.
 
 ## Tooling Standards
 
-- use `pnpm` as the package manager
 - keep dependency usage explicit and justified
 - avoid mixing package manager conventions across the same project
 - keep scripts consistent and predictable
 - prefer lightweight and maintainable frontend tooling
 - ensure linting and formatting are enforced in normal development workflow
+
+---
 
 ## Vite Standards
 
@@ -184,7 +187,7 @@ When relevant, document major architecture impact through ARD or ADR updates.
 
 ## Data Fetching and State Expectations
 
-- prefer `useQuery` and related query patterns for server-state management
+- prefer TanStack Query (`useQuery` and related patterns) for server-state management
 - keep server state and client UI state conceptually separate
 - avoid reinventing caching and request lifecycle behavior unnecessarily
 - use React Context for limited shared application concerns when appropriate
@@ -231,6 +234,18 @@ If the task affects API behavior, reflect the impact in docs and tests.
 
 ---
 
+## Form Handling Expectations
+
+- form state and validation should be explicit, consistent, and maintainable
+- avoid ad hoc form handling patterns scattered across the application
+- choose a form approach deliberately based on project needs
+- ensure validation feedback is accessible and understandable
+- keep submission, loading, success, and error states explicit
+- TypeScript-friendly validation libraries such as Zod may be preferred when starting from scratch, but the project should not enforce a library dogmatically without context
+- the chosen form strategy may vary depending on the adopted UI framework, design system, validation complexity, and project conventions
+
+---
+
 ## Internationalization Expectations
 
 - use `i18next` for internationalization
@@ -241,6 +256,15 @@ If the task affects API behavior, reflect the impact in docs and tests.
 - ensure UI text is translation-friendly
 - do not hardcode user-facing copy when it should be localizable
 - verify that accessibility text is also internationalization-aware where relevant
+
+---
+
+## Styling Expectations
+
+- use a styling approach that is consistent across the application
+- avoid mixing multiple styling paradigms without clear justification
+- prefer maintainable and explicit styling choices
+- ensure styling decisions support responsiveness, accessibility, and long-term readability
 
 ---
 

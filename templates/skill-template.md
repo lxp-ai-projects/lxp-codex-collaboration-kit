@@ -1,4 +1,4 @@
-# Skill Name - version 1.0 - last updated: 2024-06-17 - by Laurie and Patrick
+# Skill Template - version 1.1 - last updated: 2026-04-12 - by Laurie and Patrick
 
 ## Purpose
 
