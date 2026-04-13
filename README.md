@@ -155,7 +155,6 @@ cp skills/<skill-name>/skill.md .agents/skills/<skill-name>/SKILL.md
 
 If you want to use them with **Claude Code**, copy them into a Claude-recognized skill directory and rename the file to `SKILL.md`.
 
-
 Use this when you want a skill available across all your local projects.
 
 ```bash
